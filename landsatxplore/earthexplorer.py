@@ -17,7 +17,9 @@ EE_LOGOUT_URL = "https://earthexplorer.usgs.gov/logout"
 EE_DOWNLOAD_URL = (
     "https://earthexplorer.usgs.gov/download/{data_product_id}/{entity_id}/EE/"
 )
-
+EE_DOWNLOAD_URL_LAND9 = (
+    "https://earthexplorer.usgs.gov/download/{data_product_id}/{display_id}"
+)
 # IDs of GeoTIFF data product for each dataset
 DATA_PRODUCTS = {
     "landsat_tm_c1": "5e83d08fd9932768",
@@ -28,7 +30,7 @@ DATA_PRODUCTS = {
     "landsat_ot_c2_l1": "5e81f14ff4f9941c",
     "landsat_tm_c2_l2": "5e83d11933473426",
     "landsat_etm_c2_l2": "5e83d12aada2e3c5",
-    "landsat_ot_c2_l2": "5e83d14f30ea90a9",
+    "landsat_ot_c2_l2": "5f85f0419985f2aa",
     "sentinel_2a": "5e83a42c6eba8084",
 }
 
@@ -144,6 +146,8 @@ class EarthExplorer(object):
             entity_id = self.api.get_entity_id(identifier, dataset)
         else:
             entity_id = identifier
+        if "landsat_ot_c2_l2" == 'dataset':
+            EE_DOWNLOAD_URL = EE_DOWNLOAD_URL_LAND9
         url = EE_DOWNLOAD_URL.format(
             data_product_id=DATA_PRODUCTS[dataset], entity_id=entity_id
         )
