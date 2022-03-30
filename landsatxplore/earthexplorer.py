@@ -30,7 +30,7 @@ DATA_PRODUCTS = {
     "landsat_ot_c2_l1": "5e81f14ff4f9941c",
     "landsat_tm_c2_l2": "5e83d11933473426",
     "landsat_etm_c2_l2": "5e83d12aada2e3c5",
-    "landsat_ot_c2_l2": "5f85f0419985f2aa",
+    "landsat_ot_c2_l2": "5e83d14fec7cae84",
     "sentinel_2a": "5e83a42c6eba8084",
 }
 
@@ -38,14 +38,14 @@ DATA_PRODUCTS = {
 def _get_tokens(body):
     """Get `csrf_token` and `__ncforminfo`."""
     csrf = re.findall(r'name="csrf" value="(.+?)"', body)[0]
-    ncform = re.findall(r'name="__ncforminfo" value="(.+?)"', body)[0]
+    # ncform = re.findall(r'name="__ncforminfo" value="(.+?)"', body)[0]
 
     if not csrf:
         raise EarthExplorerError("EE: login failed (csrf token not found).")
-    if not ncform:
-        raise EarthExplorerError("EE: login failed (ncforminfo not found).")
+    # if not ncform:
+        # raise EarthExplorerError("EE: login failed (ncforminfo not found).")
 
-    return csrf, ncform
+    return csrf
 
 
 class EarthExplorer(object):
@@ -65,12 +65,12 @@ class EarthExplorer(object):
     def login(self, username, password):
         """Login to Earth Explorer."""
         rsp = self.session.get(EE_LOGIN_URL)
-        csrf, ncform = _get_tokens(rsp.text)
+        csrf = _get_tokens(rsp.text)
         payload = {
             "username": username,
             "password": password,
             "csrf": csrf,
-            "__ncforminfo": ncform,
+            # "__ncforminfo": ncform,
         }
         rsp = self.session.post(EE_LOGIN_URL, data=payload, allow_redirects=True)
 
@@ -146,10 +146,13 @@ class EarthExplorer(object):
             entity_id = self.api.get_entity_id(identifier, dataset)
         else:
             entity_id = identifier
-        if "landsat_ot_c2_l2" == 'dataset':
-            EE_DOWNLOAD_URL = EE_DOWNLOAD_URL_LAND9
-        url = EE_DOWNLOAD_URL.format(
-            data_product_id=DATA_PRODUCTS[dataset], entity_id=entity_id
-        )
+        if "landsat_ot_c2_l2" == dataset:
+            url = EE_DOWNLOAD_URL_LAND9.format(
+                data_product_id=DATA_PRODUCTS[dataset], display_id=identifier
+            )
+        else:
+            url = EE_DOWNLOAD_URL.format(
+                data_product_id=DATA_PRODUCTS[dataset], entity_id=entity_id
+            )
         filename = self._download(url, output_dir, timeout=timeout, skip=skip)
         return filename

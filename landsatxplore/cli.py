@@ -1,5 +1,6 @@
 """Command-line interface."""
 
+from email.policy import default
 import os
 import json
 import csv
@@ -8,21 +9,10 @@ from io import StringIO
 import click
 
 from landsatxplore.api import API
-from landsatxplore.earthexplorer import EarthExplorer
+from landsatxplore.earthexplorer import EarthExplorer, DATA_PRODUCTS
 from landsatxplore.errors import LandsatxploreError
 
-DATASETS = [
-    "landsat_tm_c1",
-    "landsat_etm_c1",
-    "landsat_8_c1",
-    "landsat_tm_c2_l1",
-    "landsat_tm_c2_l2",
-    "landsat_etm_c2_l1",
-    "landsat_etm_c2_l2",
-    "landsat_ot_c2_l1",
-    "landsat_ot_c2_l2",
-    "sentinel_2a",
-]
+DATASETS = list(DATA_PRODUCTS.keys())
 
 
 @click.group()
@@ -139,7 +129,7 @@ def search(
     help="EarthExplorer password.",
     envvar="LANDSATXPLORE_PASSWORD",
 )
-@click.option("--dataset", "-d", type=click.STRING, required=False, help="Dataset")
+@click.option("--dataset", "-d", type=click.STRING, required=False, help="Dataset" )
 @click.option(
     "--output",
     "-o",

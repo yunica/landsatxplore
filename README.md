@@ -140,6 +140,13 @@ Options:
   --help                 Show this message and exit.
 ```
 
+example:
+
+```sh
+landsatxplore download -o . -t 30  LC91950512022029LGN00
+
+```
+
 If the `--dataset` is not provided, the dataset is automatically guessed from the scene identifier. Note that only the newer Landsat Product Identifiers contain information related to collection number and processing level. To download Landsat Collection 2 products, use Product IDs or set the `--dataset` option correctly.
 
 
