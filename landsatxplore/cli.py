@@ -129,7 +129,7 @@ def search(
     help="EarthExplorer password.",
     envvar="LANDSATXPLORE_PASSWORD",
 )
-@click.option("--dataset", "-d", type=click.STRING, required=False, help="Dataset" )
+@click.option("--dataset", "-d", type=click.STRING, required=False, help="Dataset")
 @click.option(
     "--output",
     "-o",
